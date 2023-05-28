@@ -1,0 +1,9 @@
+default-group: local
+groups:
+  local:
+    generators:
+      - name: fernapi/fern-fastapi-server
+        version: 0.3.6
+        output:
+          location: local-file-system
+          path: ../../generated/fastapi

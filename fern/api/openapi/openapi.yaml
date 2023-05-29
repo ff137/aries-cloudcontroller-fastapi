@@ -1548,7 +1548,7 @@ paths:
       x-codegen-request-body-name: body
   /issue-credential-2.0/records:
     get:
-      operationId: get_matching_cred_ex_records
+      operationId: get_matching_cred_ex_records-v2
       parameters:
       - description: Connection identifier
         explode: true
@@ -3154,7 +3154,7 @@ paths:
       x-codegen-request-body-name: body
   /present-proof-2.0/records:
     get:
-      operationId: get_matching_pres_ex_records
+      operationId: get_matching_pres_ex_records-v2
       parameters:
       - description: Connection identifier
         explode: true
@@ -3259,7 +3259,7 @@ paths:
       - present-proof v2.0
   /present-proof-2.0/records/{pres_ex_id}/credentials:
     get:
-      operationId: get_pres_ex_credentials
+      operationId: get_pres_ex_credentials-v2
       parameters:
       - description: Presentation exchange identifier
         explode: false
@@ -4294,30 +4294,31 @@ paths:
       summary: Set revocation registry state manually
       tags:
       - revocation
-  /revocation/registry/{rev_reg_id}/tails-file:
-    get:
-      operationId: download_tails_file
-      parameters:
-      - description: Revocation Registry identifier
-        explode: false
-        in: path
-        name: rev_reg_id
-        required: true
-        schema:
-          pattern: "^([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{21,22}):4:([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{21,22}):3:CL:(([1-9][0-9]*)|([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{21,22}:2:.+:[0-9.]+))(:.+)?:CL_ACCUM:(.+$)"
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/octet-stream:
-              schema:
-                format: binary
-                type: string
-          description: tails file
-      summary: Download tails file
-      tags:
-      - revocation
+  # Fern's FastAPI generator doesn't support file download
+  # /revocation/registry/{rev_reg_id}/tails-file:
+  #   get:
+  #     operationId: download_tails_file
+  #     parameters:
+  #     - description: Revocation Registry identifier
+  #       explode: false
+  #       in: path
+  #       name: rev_reg_id
+  #       required: true
+  #       schema:
+  #         pattern: "^([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{21,22}):4:([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{21,22}):3:CL:(([1-9][0-9]*)|([123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{21,22}:2:.+:[0-9.]+))(:.+)?:CL_ACCUM:(.+$)"
+  #         type: string
+  #       style: simple
+  #     responses:
+  #       "200":
+  #         content:
+  #           application/octet-stream:
+  #             schema:
+  #               format: binary
+  #               type: string
+  #         description: tails file
+  #     summary: Download tails file
+  #     tags:
+  #     - revocation
     put:
       operationId: upload_tails_file
       parameters:
@@ -5294,6 +5295,7 @@ components:
       title: AttachDecoratorData1JWS
       type: object
     AttachDecoratorDataJWS:
+      x-fern-type-name: AttachDecoratorDataJWS
       properties:
         header:
           $ref: '#/components/schemas/AttachDecoratorDataJWSHeader'
@@ -7475,6 +7477,15 @@ components:
           - '>'
           example: '>='
           type: string
+          x-fern-enum: 
+            "<": 
+              name: LessThan
+            "<=": 
+              name: LessThanOrEqualTo
+            ">=": 
+              name: GreaterThanOrEqualTo
+            ">": 
+              name: GreaterThan
         threshold:
           description: Threshold value
           format: int32
@@ -7745,6 +7756,15 @@ components:
           - <=
           - '>='
           - '>'
+          x-fern-enum: 
+            "<": 
+              name: LessThan
+            "<=": 
+              name: LessThanOrEqualTo
+            ">=": 
+              name: GreaterThanOrEqualTo
+            ">": 
+              name: GreaterThan
           example: '>='
           type: string
         p_value:
